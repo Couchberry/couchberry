@@ -84,7 +84,7 @@ function choose_output_dev {
         done
         
         read -p "Device number: " DEVICE_NUM
-        if [ "$DEVICE_NUM" -lt 0 -o "$DEVICE_NUM" -gt ${#OUTPUT_DEVS[@]} ]
+        if [ "$DEVICE_NUM" -lt 0 ] || [ "$DEVICE_NUM" -gt ${#OUTPUT_DEVS[@]} ]
         then
             echo "You MUST pass correct device number!"
             echo
@@ -104,7 +104,7 @@ RUN_DD=0
 while true;
 do
     read -p "Run the following command? '$DD_COMMAND' [yes/no] " RESPONSE
-    if [ "$RESPONSE" != "yes" -a "$RESPONSE" != "no" ]
+    if [ "$RESPONSE" != "yes" ] && [ "$RESPONSE" != "no" ]
     then
         echo "You MUST type 'yes' or 'no'"
         echo

@@ -33,6 +33,7 @@
 
 DOWNLOAD_LINK="https://downloads.raspberrypi.org/raspbian_lite_latest"
 IMG_ARCHIVE_NAME="*-raspbian-*-lite.zip"
+ENABLE_SSHD=true
 
 DD_BS="8M"
 
@@ -124,3 +125,16 @@ then
     sync
 fi
 
+# enable sshd by creating 'ssh' file on /boot partition
+TEMP_DIR=$(mktemp -d)
+BOOT_PARTITION="$OUT_IF"p1
+if [ $ENABLE_SSHD ]; then
+    echo "Mounting '$BOOT_PARTITION' to '$TEMP_DIR'"
+    sudo mount $BOOT_PARTITION $TEMP_DIR
+    echo "Creating 'ssh' file on /boot partition to enable sshd"
+    sudo touch "$TEMP_DIR/ssh"
+    echo "Unmounting $TEMP_DIR"
+    sync
+    sudo umount $TEMP_DIR
+fi
+rm -rf "$TEMP_DIR"

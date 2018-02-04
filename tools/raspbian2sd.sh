@@ -41,7 +41,7 @@ DD_BS="8M"
 OUT_IF=""
 
 # download the latest image
-wget --trust-server-names -nc "$DOWNLOAD_LINK"
+wget -q --trust-server-names -nc "$DOWNLOAD_LINK"
 
 ARCHIVES=($(find . -name "$IMG_ARCHIVE_NAME" | sort -r))
 LATEST_ARCHIVE=${ARCHIVES[0]}

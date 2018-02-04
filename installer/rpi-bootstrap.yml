@@ -1,0 +1,9 @@
+---
+- name: Initial setup for vanialla Raspbian image
+  hosts: raspberry-initial
+  remote_user: pi
+  become: yes
+  become_method: sudo
+
+  roles:
+    - raspberrypi

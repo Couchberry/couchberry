@@ -1,0 +1,12 @@
+---
+# defaults file for raspberrypi
+system_user: "user"
+# generate password string using http://docs.ansible.com/ansible/latest/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
+# e.g. run: python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.using(rounds=5000).hash(getpass.getpass())"
+# the following will every time generate a hash for password "pass" with random salt
+system_user_password: "{{ 'pass'|password_hash('sha512') }}"
+system_user_groups: "sudo"
+system_user_shell: "/bin/bash"
+system_user_authorized_ssh_key: "https://github.com/user.keys"
+
+system_hostname: "{{ ansible_lsb.id|lower }}-{{ ansible_eth0.macaddress|replace(':','') }}"

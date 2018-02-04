@@ -1,0 +1,47 @@
+---
+# tasks file for raspberrypi
+- name: expand filesystem to the whole sd card
+  filesystem:
+    fstype: ext4
+    dev: /dev/mmcblk0p2
+    resizefs: yes
+
+- name: change default hostname
+  hostname:
+    name: "{{ system_hostname }}"
+
+- name: add new user
+  user:
+    name: "{{ system_user }}"
+    password: "{{ system_user_password }}"
+    groups: "{{ system_user_groups }}"
+    shell: "{{ system_user_shell }}"
+    append: yes
+
+- name: setup authorized keys for new user
+  authorized_key:
+    user: "{{ system_user }}"
+    state: present
+    key: "{{ system_user_authorized_ssh_key }}"
+
+- name: setup nopasswd sudo for new user
+  copy:
+    content: "{{ system_user }} ALL=(ALL) NOPASSWD: ALL"
+    dest: "/etc/sudoers.d/010_{{ system_user }}-nopasswd"
+    owner: root
+    group: root
+    mode: 0440
+
+- name: remove the default rpi user from sudoers
+  file:
+    path: /etc/sudoers.d/010_pi-nopasswd
+    state: absent
+
+- name: disable the default rpi user account
+  user:
+    name: pi
+    state: absent
+    remove: yes
+    force: yes
+  # this needs to be here, since at this point 'pi' user can not do sudo without password
+  remote_user: "{{ system_user }}"
